@@ -1,12 +1,12 @@
 FROM archlinux:latest
 
 # define user
-ARG USER=docker
+ARG USER=hostuser
 ARG UID=1000
 ARG GID=1000
-ARG PW=docker
-RUN useradd -m ${USER} --uid=${UID} -s /bin/zsh && echo "${USER}:${PW}" | chpasswd
+RUN useradd -m ${USER} --uid=${UID} -s /bin/zsh
 
+COPY dotfiles/. /root
 COPY --chown=${USER}:${USER} dotfiles/. /home/${USER}/.
 
 # installs
@@ -42,6 +42,7 @@ RUN rm -rf /tmp/*
 # defaults
 ENV TERM=xterm-256color
 ENV SHELL=/bin/zsh
-USER ${UID}:${GID}
+VOLUME /home/${USER}
 WORKDIR /home/${USER}
+#USER ${USER}
 CMD ["/bin/zsh"]
