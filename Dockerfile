@@ -4,7 +4,7 @@ FROM archlinux:latest
 ARG USER=hostuser
 ARG UID=1000
 ARG GID=1000
-RUN useradd -m ${USER} --uid=${UID} -s /bin/zsh
+RUN useradd -m ${USER} --uid=${UID}
 
 COPY dotfiles/. /root
 COPY --chown=${USER}:${USER} dotfiles/. /home/${USER}/.
@@ -42,7 +42,8 @@ RUN rm -rf /tmp/*
 # defaults
 ENV TERM=xterm-256color
 ENV SHELL=/bin/zsh
+ENV HOST_USER=${USER}
+ENV HOST_DIR=/home/${USER}
 VOLUME /home/${USER}
 WORKDIR /home/${USER}
-#USER ${USER}
 CMD ["/bin/zsh"]
