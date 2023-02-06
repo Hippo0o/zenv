@@ -190,6 +190,10 @@ duh() {
     du -d 1 -h $@ | sort -h
 }
 
+h() {
+    ssh -t $HOST_USER@localhost $@
+}
+
 update() {
     abduco -e ^q -A update nvim +"terminal flatpak update --user" +vsplit +"terminal yay -Syu"
 }

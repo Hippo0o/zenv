@@ -43,11 +43,8 @@ ENV HOST_UID=${HOST_UID}
 RUN rm -rf /root
 VOLUME /root
 
-COPY dotfiles /dotfiles
-
 COPY add-aur.sh /tmp/add-aur.sh
 RUN chmod +x /tmp/add-aur.sh && /tmp/add-aur.sh
-
 
 # install zsh
 RUN pacman -S --noconfirm --needed zsh \
@@ -59,22 +56,23 @@ RUN mkdir -p /root/.cache/oh-my-zsh
 RUN chsh -s /bin/zsh && chsh -s /bin/zsh ${USER}
 
 # install neovim
-RUN pacman -S --noconfirm --needed neovim
-#RUN aur-install neovim-git
+#RUN pacman -S --noconfirm --needed neovim
+RUN aur-install neovim-git
 RUN aur-install neovim-remote
 RUN aur-install neovim-plug
 RUN pacman -S --noconfirm --needed python-pynvim
 RUN ln -s /bin/nvim /bin/vi
-
-RUN cp -r /dotfiles/. /root
-RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall && nvim --headless +"TSInstallSync all" +qall
-RUN cp -r /root/. /dotfiles/.
 
 # install tools
 RUN pacman -Syu --noconfirm --needed \
 ttf-nerd-fonts-symbols-1000-em-mono otf-firamono-nerd \
 direnv abduco fd ripgrep fzf
 
+COPY dotfiles /dotfiles
+
+RUN cp -r /dotfiles/. /root
+RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall && nvim --headless +"TSInstallSync all" +qall
+RUN cp -r /root/. /dotfiles/.
 
 # cleanup
 RUN pacman -Scc --noconfirm
@@ -90,3 +88,4 @@ WORKDIR /root
 
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
+CMD ["tail", "-f", "/dev/null"]
