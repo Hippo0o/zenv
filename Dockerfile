@@ -66,14 +66,12 @@ RUN ln -s /bin/nvim /bin/vi
 
 # install tools
 RUN pacman -Syu --noconfirm --needed \
-otf-firamono-nerd \
+ttf-nerd-fonts-symbols-1000-em-mono otf-firamono-nerd \
 direnv abduco fd ripgrep fzf
 
 # setup
-COPY dotfiles/. /root
+COPY dotfiles /dotfiles
 COPY --chown=${USER}:${USER} dotfiles/. /home/${USER}/.
-
-RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall
 
 # cleanup
 RUN pacman -Scc --noconfirm
@@ -85,7 +83,7 @@ ENV SHELL=/bin/zsh
 ENV VISUAL=nvim
 ENV EDITOR=nvim
 
-RUN mkdir -p /workdir && chown -R ${HOST_USER}:${HOST_USER} /root/workdir
-WORKDIR /workdir
+WORKDIR /root
 
-CMD ["tail", "-f", "/dev/null"]
+COPY entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
