@@ -40,11 +40,8 @@ ENV HOST_USER=${HOST_USER}
 ENV HOST_DIR=/home/${HOST_USER}
 ENV HOST_UID=${HOST_UID}
 
-RUN rm -rf /root/
+RUN rm -rf /root
 VOLUME /root
-
-COPY dotfiles/. /root
-COPY --chown=${USER}:${USER} dotfiles/. /home/${USER}/.
 
 COPY add-aur.sh /tmp/add-aur.sh
 RUN chmod +x /tmp/add-aur.sh && /tmp/add-aur.sh
@@ -66,11 +63,17 @@ RUN aur-install neovim-remote
 RUN aur-install neovim-plug
 RUN pacman -S --noconfirm --needed python-pynvim
 RUN ln -s /bin/nvim /bin/vi
-RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall
 
+# install tools
 RUN pacman -Syu --noconfirm --needed \
 otf-firamono-nerd \
 direnv abduco fd ripgrep fzf
+
+# setup
+COPY dotfiles/. /root
+COPY --chown=${USER}:${USER} dotfiles/. /home/${USER}/.
+
+RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall
 
 # cleanup
 RUN pacman -Scc --noconfirm
@@ -82,7 +85,7 @@ ENV SHELL=/bin/zsh
 ENV VISUAL=nvim
 ENV EDITOR=nvim
 
-RUN mkdir -p /root/workdir && chown -R ${HOST_USER}:${HOST_USER} /root/workdir
-WORKDIR /root
+RUN mkdir -p /workdir && chown -R ${HOST_USER}:${HOST_USER} /root/workdir
+WORKDIR /workdir
 
 CMD ["tail", "-f", "/dev/null"]
