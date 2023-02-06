@@ -1,0 +1,23 @@
+[user]
+	email = seifert@devlabor.com
+	name = Tobias S
+	signingkey = 8A556579C8EED0C6B3FC0DD1183508DE0ABBE1A4
+[init]
+	defaultBranch = main
+[core]
+	autocrlf = input
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[pull]
+	rebase = false
+[rebase]
+	autoStash = true
+[commit]
+	gpgsign = true
+[push]
+	autoSetupRemote = true
+[safe]
+	directory = *

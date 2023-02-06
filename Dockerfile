@@ -32,6 +32,9 @@ git \
 base-devel \
 docker \
 docker-compose \
+sshfs \
+rsync \
+openssh \
 go \
 python \
 python-pip \
@@ -44,6 +47,8 @@ php \
 composer
 
 COPY add-aur.sh /tmp/add-aur.sh
+# cache pkg builds
+VOLUME /var/ab/
 RUN chmod +x /tmp/add-aur.sh && /tmp/add-aur.sh
 
 RUN pacman -Syu --noconfirm --needed \
@@ -64,7 +69,9 @@ RUN chsh -s /bin/zsh && chsh -s /bin/zsh ${USER}
 
 
 # install neovim
-RUN aur-install neovim-git neovim-remote neovim-plug
+RUN aur-install neovim-git
+RUN aur-install neovim-remote
+RUN aur-install neovim-plug
 RUN pacman -S --noconfirm --needed python-pynvim
 RUN ln -s /bin/nvim /bin/vi
 RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall
@@ -78,7 +85,7 @@ RUN rm -rf /tmp/*
 ENV TERM=xterm-256color
 ENV SHELL=/bin/zsh
 
-RUN mkdir -p /root/workdir && chown -R ${USER}:${USER} /root/workdir
+RUN mkdir -p /root/workdir && chown -R ${HOST_USER}:${HOST_USER} /root/workdir
 WORKDIR /root/workdir
 
 CMD ["tail", "-f", "/dev/null"]
