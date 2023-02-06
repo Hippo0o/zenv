@@ -1,7 +1,6 @@
 [user]
 	email = seifert@devlabor.com
 	name = Tobias S
-	signingkey = 8A556579C8EED0C6B3FC0DD1183508DE0ABBE1A4
 [init]
 	defaultBranch = main
 [core]
@@ -16,7 +15,7 @@
 [rebase]
 	autoStash = true
 [commit]
-	gpgsign = true
+	gpgsign = false
 [push]
 	autoSetupRemote = true
 [safe]

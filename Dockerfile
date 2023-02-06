@@ -4,6 +4,26 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV TZ=Europe/Berlin
 
+# installs
+RUN pacman -Syu --noconfirm --needed \
+git \
+base-devel \
+docker \
+docker-compose \
+sshfs \
+rsync \
+openssh \
+go \
+python \
+python-pip \
+nodejs \
+npm \
+yarn \
+ruby \
+rubygems \
+php \
+composer
+
 # define users
 ARG HOST_USER=hostuser
 ARG HOST_UID=1000
@@ -26,35 +46,8 @@ VOLUME /root
 COPY dotfiles/. /root
 COPY --chown=${USER}:${USER} dotfiles/. /home/${USER}/.
 
-# installs
-RUN pacman -Syu --noconfirm --needed \
-git \
-base-devel \
-docker \
-docker-compose \
-sshfs \
-rsync \
-openssh \
-go \
-python \
-python-pip \
-nodejs \
-npm \
-yarn \
-ruby \
-rubygems \
-php \
-composer
-
 COPY add-aur.sh /tmp/add-aur.sh
-# cache pkg builds
-VOLUME /var/ab/
 RUN chmod +x /tmp/add-aur.sh && /tmp/add-aur.sh
-
-RUN pacman -Syu --noconfirm --needed \
-otf-firamono-nerd \
-direnv abduco fd ripgrep fzf
-
 
 # install zsh
 RUN pacman -S --noconfirm --needed zsh \
@@ -67,7 +60,6 @@ RUN mkdir -p /home/$USER/.cache/oh-my-zsh
 RUN chown -R $USER: /home/$USER/.cache
 RUN chsh -s /bin/zsh && chsh -s /bin/zsh ${USER}
 
-
 # install neovim
 RUN aur-install neovim-git
 RUN aur-install neovim-remote
@@ -76,6 +68,9 @@ RUN pacman -S --noconfirm --needed python-pynvim
 RUN ln -s /bin/nvim /bin/vi
 RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall
 
+RUN pacman -Syu --noconfirm --needed \
+otf-firamono-nerd \
+direnv abduco fd ripgrep fzf
 
 # cleanup
 RUN pacman -Scc --noconfirm
@@ -84,8 +79,10 @@ RUN rm -rf /tmp/*
 # defaults
 ENV TERM=xterm-256color
 ENV SHELL=/bin/zsh
+ENV VISUAL=nvim
+ENV EDITOR=nvim
 
 RUN mkdir -p /root/workdir && chown -R ${HOST_USER}:${HOST_USER} /root/workdir
-WORKDIR /root/workdir
+WORKDIR /root
 
 CMD ["tail", "-f", "/dev/null"]
