@@ -160,7 +160,7 @@ path-to-id() {
 }
 
 vis() {
-    cd "$1" && abduco -e ^z -A "$(path-to-id $(pwd))" "vi $2 +'SessionManager load_current_dir_session'"
+    cd "$1" && abduco -e ^z -A "$(path-to-id $(pwd))" vi $2 +'SessionManager load_current_dir_session'
     cd -
 }
 sis() {
@@ -199,10 +199,9 @@ t() {
 }
 
 h() {
-    # requires abduco on host
-    SESSION_ID=${$(echo $@)//\//__}
+    SESSION_ID=h_${$(echo $@)//\//__}
     SESSION_ID=${${SESSION_ID}// /+}
-    ssh -t $HOST_USER@localhost "abduco -e ^z -A $SESSION_ID $@"
+    abduco -e ^z -A $SESSION_ID ssh -t $HOST_USER@localhost $@
 }
 
 update() {
