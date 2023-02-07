@@ -40,9 +40,6 @@ ENV HOST_USER=${HOST_USER}
 ENV HOST_DIR=/home/${HOST_USER}
 ENV HOST_UID=${HOST_UID}
 
-RUN rm -rf /root
-VOLUME /root
-
 COPY add-aur.sh /tmp/add-aur.sh
 RUN chmod +x /tmp/add-aur.sh && /tmp/add-aur.sh
 
@@ -53,7 +50,7 @@ RUN aur-install oh-my-zsh-git
 RUN ln -s /usr/share/zsh-theme-powerlevel10k /usr/share/oh-my-zsh/custom/themes/powerlevel10k
 RUN ln -s /usr/share/zsh/plugins/zsh-autosuggestions /usr/share/oh-my-zsh/custom/plugins/zsh-autosuggestions
 RUN mkdir -p /root/.cache/oh-my-zsh
-RUN chsh -s /bin/zsh && chsh -s /bin/zsh ${USER}
+RUN chsh -s /bin/zsh && chsh -s /bin/zsh ${HOST_USER} && chsh -s /bin/zsh ${USER}
 
 # install neovim
 #RUN pacman -S --noconfirm --needed neovim

@@ -1,7 +1,7 @@
 #! /bin/bash
 
-cp -r /dotfiles/. /root/.
-cp -r /dotfiles/. $JAILED_DIR/.
-chown -R ${JAILED_USER}: $JAILED_DIR
+rsync -a /dotfiles/. /root/.
+rsync -a /dotfiles/. $JAILED_DIR/. --chown=$JAILED_USER:$JAILED_USER
+rsync -a /dotfiles/. $HOST_DIR/. --chown=$HOST_USER:$HOST_USER
 
 $@
