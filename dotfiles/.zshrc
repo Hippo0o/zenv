@@ -190,6 +190,14 @@ duh() {
     du -d 1 -h $@ | sort -h
 }
 
+j() {
+    su $JAILED_USER $@
+}
+
+t() {
+    su $HOST_USER $@
+}
+
 h() {
     ssh -t $HOST_USER@localhost $@
 }
