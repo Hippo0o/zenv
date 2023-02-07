@@ -2,7 +2,7 @@
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 PATH=$PATH:$HOME/.local/bin:$(ruby -e 'puts Gem.user_dir')/bin:$HOME/.node/bin:$HOME/.config/composer/vendor/bin:$(go env GOPATH)/bin
@@ -135,24 +135,24 @@ alias fd='fd -HI'
 # # usage: ex <file>
 ex ()
 {
-  if [ -f $1 ] ; then
-    case $1 in
-      *.tar.bz2)   tar xjf $1   ;;
-      *.tar.gz)    tar xzf $1   ;;
-      *.bz2)       bunzip2 $1   ;;
-      *.rar)       unrar x $1   ;;
-      *.gz)        gunzip $1    ;;
-      *.tar)       tar xf $1    ;;
-      *.tbz2)      tar xjf $1   ;;
-      *.tgz)       tar xzf $1   ;;
-      *.zip)       unzip $1 -d `basename $1 .zip` ;;
-      *.Z)         uncompress $1;;
-      *.7z)        7z x $1      ;;
-      *)           echo "'$1' cannot be extracted via ex()" ;;
-    esac
-  else
-    echo "'$1' is not a valid file"
-  fi
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2)   tar xjf $1   ;;
+            *.tar.gz)    tar xzf $1   ;;
+            *.bz2)       bunzip2 $1   ;;
+            *.rar)       unrar x $1   ;;
+            *.gz)        gunzip $1    ;;
+            *.tar)       tar xf $1    ;;
+            *.tbz2)      tar xjf $1   ;;
+            *.tgz)       tar xzf $1   ;;
+            *.zip)       unzip $1 -d `basename $1 .zip` ;;
+            *.Z)         uncompress $1 ;;
+            *.7z)        7z x $1      ;;
+            *)           echo "'$1' cannot be extracted via ex()" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
 }
 
 path-to-id() {
@@ -160,7 +160,7 @@ path-to-id() {
 }
 
 vis() {
-    cd "$1" && abduco -e ^z -A "$(path-to-id $(pwd))" vi $2 +"SessionManager load_current_dir_session"
+    cd "$1" && abduco -e ^z -A "$(path-to-id $(pwd))" "vi $2 +'SessionManager load_current_dir_session'"
     cd -
 }
 sis() {
@@ -182,7 +182,7 @@ mkvi() { mkdir -p "$(dirname "$1")" && vi "$1" ; }
 git-acp() {
     git add .;
     git commit -m "$(date +%Y-%m-%d\ %H:%M)
-$(git status -s)"; 
+    $(git status -s)";
     git push
 }
 
@@ -199,11 +199,15 @@ t() {
 }
 
 h() {
-    ssh -t $HOST_USER@localhost $@
+    # requires abduco on host
+    SESSION_ID=${$(echo $@)//\//__}
+    SESSION_ID=${${SESSION_ID}// /+}
+    ssh -t $HOST_USER@localhost "abduco -e ^z -A $SESSION_ID $@"
 }
 
 update() {
-    abduco -e ^q -A update nvim +"terminal flatpak update --user" +vsplit +"terminal yay -Syu"
+    h "yay -Syu"
+    h "flatpak update --user"
 }
 
 bdiff() { diff -u $@ | ydiff -s -w 0 }
