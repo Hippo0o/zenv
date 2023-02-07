@@ -63,7 +63,8 @@ RUN ln -s /bin/nvim /bin/vi
 # install tools
 RUN pacman -Syu --noconfirm --needed \
 ttf-nerd-fonts-symbols-1000-em-mono otf-firamono-nerd \
-direnv abduco fd ripgrep fzf
+direnv abduco fd ripgrep fzf \
+wl-clipboard
 
 COPY dotfiles /dotfiles
 
