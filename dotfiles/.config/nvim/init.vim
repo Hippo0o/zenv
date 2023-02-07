@@ -57,7 +57,7 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'neovim/nvim-lspconfig'
   Plug 'jose-elias-alvarez/null-ls.nvim'
   Plug 'LostNeophyte/null-ls-embedded'
-  Plug 'github/copilot.vim'
+  Plug 'github/copilot.vim', {'commit': '324ec9eb69e20971b58340d0096c3caac7bc2089'}
   " Plug 'Hippo0o/copilot.lua'
   Plug 'hrsh7th/nvim-cmp'
   Plug 'ray-x/cmp-treesitter'
@@ -262,9 +262,9 @@ inoremap <Up> <C-o>gk
 " vnoremap <S-Down> :m '>+1<CR>gv=gv
 " vnoremap <S-Up> :m '<-2<CR>gv=gv
 
-" nnoremap y "+y
-" vnoremap y "+y
-" vnoremap x "+x
+nnoremap y "+y
+vnoremap y "+y
+vnoremap x "+x
 map <leader>p o<Esc>p
 map <leader>P O<Esc>p
 
@@ -358,10 +358,9 @@ require('hlslens').setup{
 EOF
 
 
-
-
 " vim-matchup
 let g:matchup_matchparen_nomode = 'i'
+let g:matchup_surround_enabled = 1
 let g:matchup_matchparen_deferred = 1
 let g:matchup_matchparen_offscreen = {'method': 'none', 'fullwidth': 1, 'syntax_hl': 0}
 
