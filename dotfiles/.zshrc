@@ -209,8 +209,8 @@ h() {
 }
 
 update() {
-    h "yay -Syu"
-    h "flatpak update --user"
+    hs "yay -Syu"
+    hs "flatpak update --user"
 }
 
 bdiff() { diff -u $@ | ydiff -s -w 0 }
