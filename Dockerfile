@@ -40,21 +40,22 @@ ENV HOST_USER=${HOST_USER}
 ENV HOST_DIR=/home/${HOST_USER}
 ENV HOST_UID=${HOST_UID}
 
+ARG AUR_USER=ab
 COPY add-aur.sh /tmp/add-aur.sh
-RUN chmod +x /tmp/add-aur.sh && /tmp/add-aur.sh
+RUN chmod +x /tmp/add-aur.sh && /tmp/add-aur.sh ${AUR_USER}
+RUN --mount=type=cache,target=/var/${AUR_USER} mkdir -p /var/${AUR_USER}/.cache/ && chown -R ${AUR_USER}:${AUR_USER} /var/${AUR_USER}
 
 # install zsh
 RUN pacman -S --noconfirm --needed zsh \
     zsh-completions zsh-theme-powerlevel10k zsh-autosuggestions
-RUN aur-install oh-my-zsh-git
+RUN --mount=type=cache,target=/var/${AUR_USER} aur-install oh-my-zsh-git
 RUN ln -s /usr/share/zsh-theme-powerlevel10k /usr/share/oh-my-zsh/custom/themes/powerlevel10k
 RUN ln -s /usr/share/zsh/plugins/zsh-autosuggestions /usr/share/oh-my-zsh/custom/plugins/zsh-autosuggestions
 RUN mkdir -p /root/.cache/oh-my-zsh
 RUN chsh -s /bin/zsh && chsh -s /bin/zsh ${HOST_USER} && chsh -s /bin/zsh ${USER}
 
 # install neovim
-#RUN pacman -S --noconfirm --needed neovim
-RUN aur-install neovim-git
+RUN --mount=type=cache,target=/var/${AUR_USER} aur-install neovim-git
 RUN aur-install neovim-remote
 RUN aur-install neovim-plug
 RUN pacman -S --noconfirm --needed python-pynvim
@@ -84,6 +85,7 @@ ENV EDITOR=nvim
 
 WORKDIR /root
 
+COPY sync-dotfiles.sh /sync-dotfiles.sh
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 CMD ["tail", "-f", "/dev/null"]
