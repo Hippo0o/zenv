@@ -198,10 +198,14 @@ t() {
     su $HOST_USER $@
 }
 
-h() {
+hs() {
     SESSION_ID=h_${$(echo $@)//\//__}
     SESSION_ID=${${SESSION_ID}// /+}
-    abduco -e ^z -A $SESSION_ID ssh -t $HOST_USER@localhost $@
+    abduco -e ^z -A $SESSION_ID ssh -t $HOST_USER@localhost "$@; read"
+}
+
+h() {
+    ssh -t $HOST_USER@localhost "$@"
 }
 
 update() {
