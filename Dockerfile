@@ -72,7 +72,7 @@ COPY --chown=root:root dotfiles /dotfiles
 COPY sync-dotfiles.sh /sync-dotfiles.sh
 RUN /sync-dotfiles.sh
 
-RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall #&& nvim --headless +"TSInstallSync all" +qall
+RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall && nvim --headless +"TSInstallSync all" +qall
 RUN rm -rf /root/.cache
 RUN mkdir -p /root/.ssh/sockets
 RUN mkdir -p /root/.cache/oh-my-zsh
@@ -91,7 +91,7 @@ ENV SHELL=/bin/zsh
 ENV VISUAL=nvim
 ENV EDITOR=nvim
 
-VOLUME ["${HOST_USER_CONTAINER_HOME}", "/root"]
+VOLUME ${HOST_USER_CONTAINER_HOME}
 
 WORKDIR /root
 

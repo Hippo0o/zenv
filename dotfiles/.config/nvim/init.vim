@@ -134,6 +134,7 @@ set wildmenu
 set sessionoptions+=winpos,folds sessionoptions-=terminal
 set completeopt=menu,menuone,noselect,noinsert
 set timeoutlen=300
+set ttimeoutlen=1
 set synmaxcol=300
 set winminwidth=0
 set foldmethod=indent
