@@ -29,7 +29,6 @@ ARG HOST_USER=hostuser
 ARG HOST_UID=1000
 ARG HOST_USER_CONTAINER_HOME=/var/hostuser
 RUN useradd -m ${HOST_USER} --uid=${HOST_UID} -d ${HOST_USER_CONTAINER_HOME}
-VOLUME ${HOST_USER_CONTAINER_HOME}
 
 ARG USER=jailed
 ARG UID=1010
@@ -68,17 +67,23 @@ ttf-nerd-fonts-symbols-1000-em-mono otf-firamono-nerd \
 direnv abduco fd ripgrep fzf \
 wl-clipboard
 
+# install dotfiles
 COPY --chown=root:root dotfiles /dotfiles
+COPY sync-dotfiles.sh /sync-dotfiles.sh
+RUN /sync-dotfiles.sh
 
-RUN rsync -ahP /dotfiles/. $JAILED_DIR/. --chown=$JAILED_USER:$JAILED_USER
-USER $JAILED_USER
 RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall #&& nvim --headless +"TSInstallSync all" +qall
-USER root
-RUN rsync -ahP ${JAILED_DIR}/. /dotfiles/. --chown=root:root
+RUN rm -rf /root/.cache
+RUN mkdir -p /root/.ssh/sockets
+RUN mkdir -p /root/.cache/oh-my-zsh
+
+# system settings
+COPY ./ssh_config /etc/ssh/ssh_config
 
 # cleanup
 RUN pacman -Scc --noconfirm
 RUN rm -rf /tmp/*
+RUN rm -rf /usr/local/share/.cache
 
 # defaults
 ENV TERM=xterm-256color
@@ -86,9 +91,11 @@ ENV SHELL=/bin/zsh
 ENV VISUAL=nvim
 ENV EDITOR=nvim
 
-VOLUME /root
+VOLUME ["${HOST_USER_CONTAINER_HOME}", "/root"]
+
 WORKDIR /root
 
-COPY sync-dotfiles.sh /sync-dotfiles.sh
-RUN /sync-dotfiles.sh
-CMD /sync-dotfiles.sh && tail -f /dev/null
+COPY ./entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
+
+CMD ["tail", "-f", "/dev/null"]
