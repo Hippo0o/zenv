@@ -1,3 +1,2 @@
 #!/bin/sh
-runuser $HOST_USER -c zsh ${@:2}
-zsh
+zsh ${@:2}

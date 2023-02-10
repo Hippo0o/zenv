@@ -194,7 +194,7 @@ j() {
     su $JAILED_USER $@
 }
 
-t() {
+u() {
     su $HOST_USER $@
 }
 
