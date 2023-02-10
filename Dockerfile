@@ -98,4 +98,7 @@ WORKDIR /root
 COPY ./entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 
-CMD ["tail", "-f", "/dev/null"]
+COPY ./new-zsh /new-zsh
+COPY ./kill-zsh /kill-zsh
+
+CMD ["sleep", "inf"]

@@ -115,6 +115,7 @@ set shiftwidth=4
 set expandtab
 set incsearch
 set laststatus=3
+set noautoindent
 set noshowmode
 set smartcase
 set ignorecase
@@ -153,6 +154,11 @@ let mapleader=" "
 let g:cursorhold_updatetime=100
 
 " autocmd BufWinEnter * if line2byte(line("$") + 1) > 1024*1024*4 | syntax clear | setlocal nowrap | setlocal ft=plain | endif
+augroup insert_mode_noautoindent
+  autocmd!
+  autocmd InsertEnter setlocal noautoindent
+  autocmd InsertLeave setlocal autoindent
+augroup END
 
 " autocmd BufEnter * setlocal foldmethod=expr | setlocal foldexpr=nvim_treesitter#foldexpr()
 
