@@ -46,6 +46,11 @@ ARG AUR_USER=ab
 COPY add-aur.sh /tmp/add-aur.sh
 RUN chmod +x /tmp/add-aur.sh && /tmp/add-aur.sh ${AUR_USER}
 
+# install dotfiles
+COPY --chown=root:root dotfiles /dotfiles
+COPY sync-dotfiles.sh /sync-dotfiles.sh
+RUN /sync-dotfiles.sh
+
 # install zsh
 RUN pacman -S --noconfirm --needed zsh \
     zsh-completions zsh-theme-powerlevel10k zsh-autosuggestions
@@ -58,10 +63,12 @@ RUN chsh -s /bin/zsh && chsh -s /bin/zsh ${HOST_USER} && chsh -s /bin/zsh ${USER
 RUN aur-install neovim-git
 RUN aur-install neovim-remote
 RUN aur-install neovim-plug
-RUN pacman -S --noconfirm --needed python-pynvim
 RUN ln -s /bin/nvim /bin/vi
+#TODO add needed packages like prettier etc.
+RUN pacman -S --noconfirm --needed python-pynvim stylua
 
-RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall && nvim +"TSInstallSync all" +qall
+# TODO migrate away from mason
+RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall
 RUN rm -rf /root/.cache
 RUN mkdir -p /root/.ssh/sockets
 RUN mkdir -p /root/.cache/oh-my-zsh
@@ -72,11 +79,6 @@ ttf-nerd-fonts-symbols-1000-em-mono otf-firamono-nerd \
 direnv abduco fd ripgrep fzf \
 wl-clipboard \
 htop
-
-# install dotfiles
-COPY --chown=root:root dotfiles /dotfiles
-COPY sync-dotfiles.sh /sync-dotfiles.sh
-RUN /sync-dotfiles.sh
 
 # system settings
 COPY ./ssh_config /etc/ssh/ssh_config

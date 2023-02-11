@@ -1,6 +1,6 @@
 let g:polyglot_disabled = ['sensible', 'twig']
 
-call plug#begin('~/.config/nvim/plugged')
+call plug#begin('/usr/share/nvim/plugged')
 
   Plug 'nvim-lua/popup.nvim'
   Plug 'nvim-lua/plenary.nvim'
@@ -1207,7 +1207,7 @@ end
 dap.adapters.php = {
     type = 'executable',
     command = 'node',
-    args = { vim.fn.stdpath('data') .. '/mason/packages/php-debug-adapter/extension/out/phpDebug.js' }
+    args = { '/usr/share/nvim/mason/packages/php-debug-adapter/extension/out/phpDebug.js' }
 }
 pcall(function() require('dap.ext.vscode').load_launchjs() end)
 EOF
@@ -1363,7 +1363,9 @@ vim.api.nvim_create_autocmd("CursorHold", {
     end,
 })
 
+vim.opt.runtimepath:append(vim.fn.stdpath('data') .. "/nvim-treesitter")
 require("nvim-treesitter.configs").setup({
+    parser_install_dir = vim.fn.stdpath('data') .. "/nvim-treesitter",
     ensure_installed = {
         "c",
         "vim",
@@ -1571,6 +1573,7 @@ end
 
 -- mason
 require("mason").setup({
+    install_root_dir = '/usr/share/share/nvim/mason',
     ui = {
         icons = {
             package_installed = "✓",
