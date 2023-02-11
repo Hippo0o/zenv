@@ -46,13 +46,8 @@ ARG AUR_USER=ab
 COPY add-aur.sh /tmp/add-aur.sh
 RUN chmod +x /tmp/add-aur.sh && /tmp/add-aur.sh ${AUR_USER}
 
-# install dotfiles
-COPY --chown=root:root dotfiles /dotfiles
-COPY sync-dotfiles.sh /sync-dotfiles.sh
-RUN /sync-dotfiles.sh
-
 # install zsh
-RUN pacman -S --noconfirm --needed zsh \
+RUN pacman -Syu --noconfirm --needed zsh \
     zsh-completions zsh-theme-powerlevel10k zsh-autosuggestions
 RUN aur-install oh-my-zsh-git
 RUN ln -s /usr/share/zsh-theme-powerlevel10k /usr/share/oh-my-zsh/custom/themes/powerlevel10k
@@ -64,13 +59,17 @@ RUN aur-install neovim-git
 RUN aur-install neovim-remote
 RUN aur-install neovim-plug
 RUN ln -s /bin/nvim /bin/vi
-RUN pacman -S --noconfirm --needed python-pynvim \
+RUN pacman -Syu --noconfirm --needed python-pynvim \
 stylua prettier eslint
-RUN aur-install marksman-bin
 RUN pip install beautysh
 
-# TODO migrate away from mason
+# install dotfiles
+COPY --chown=root:root dotfiles /dotfiles
+COPY sync-dotfiles.sh /sync-dotfiles.sh
+RUN /sync-dotfiles.sh
+
 RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall
+RUN nvim --headless +'MasonInstall bash-language-server clangd emmet-ls html-lsp intelephense jdtls json-lsp lemminx lua-language-server marksman pyright sqls tailwindcss-language-server typescript-language-server vim-language-server vue-language-server' +qall
 RUN rm -rf /root/.cache
 RUN mkdir -p /root/.ssh/sockets
 RUN mkdir -p /root/.cache/oh-my-zsh
