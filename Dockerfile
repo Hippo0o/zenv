@@ -61,21 +61,22 @@ RUN aur-install neovim-plug
 RUN pacman -S --noconfirm --needed python-pynvim
 RUN ln -s /bin/nvim /bin/vi
 
+RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall && nvim +"TSInstallSync all" +qall
+RUN rm -rf /root/.cache
+RUN mkdir -p /root/.ssh/sockets
+RUN mkdir -p /root/.cache/oh-my-zsh
+
 # install tools
 RUN pacman -Syu --noconfirm --needed \
 ttf-nerd-fonts-symbols-1000-em-mono otf-firamono-nerd \
 direnv abduco fd ripgrep fzf \
-wl-clipboard
+wl-clipboard \
+htop
 
 # install dotfiles
 COPY --chown=root:root dotfiles /dotfiles
 COPY sync-dotfiles.sh /sync-dotfiles.sh
 RUN /sync-dotfiles.sh
-
-RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall && nvim --headless +"TSInstallSync all" +qall
-RUN rm -rf /root/.cache
-RUN mkdir -p /root/.ssh/sockets
-RUN mkdir -p /root/.cache/oh-my-zsh
 
 # system settings
 COPY ./ssh_config /etc/ssh/ssh_config
