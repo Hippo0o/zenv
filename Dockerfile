@@ -64,8 +64,10 @@ RUN aur-install neovim-git
 RUN aur-install neovim-remote
 RUN aur-install neovim-plug
 RUN ln -s /bin/nvim /bin/vi
-#TODO add needed packages like prettier etc.
-RUN pacman -S --noconfirm --needed python-pynvim stylua
+RUN pacman -S --noconfirm --needed python-pynvim \
+stylua prettier eslint
+RUN aur-install marksman-bin
+RUN pip install beautysh
 
 # TODO migrate away from mason
 RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall
