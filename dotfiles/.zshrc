@@ -191,7 +191,7 @@ duh() {
 }
 
 j() {
-    su $JAILED_USER $@
+    docker run -it --rm -u $HOST_USER -v "$(pwd):/workdir" $@ zenv zsh
 }
 
 u() {

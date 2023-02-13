@@ -115,7 +115,6 @@ set shiftwidth=4
 set expandtab
 set incsearch
 set laststatus=3
-set noautoindent
 set noshowmode
 set smartcase
 set ignorecase
@@ -141,8 +140,8 @@ set winminwidth=0
 set foldmethod=indent
 set foldlevel=99
 set foldlevelstart=99
-set formatoptions=cqjr
 set nomodeline
+set formatoptions=cqjr
 set iskeyword+=-
 set iskeyword+=$
 
@@ -153,14 +152,12 @@ let $VISUAL="nvr -cc split --remote-wait +'setlocal bufhidden=wipe'"
 let mapleader=" "
 let g:cursorhold_updatetime=100
 
-" autocmd BufWinEnter * if line2byte(line("$") + 1) > 1024*1024*4 | syntax clear | setlocal nowrap | setlocal ft=plain | endif
-augroup insert_mode_noautoindent
+augroup force_settings
   autocmd!
   autocmd InsertEnter setlocal noautoindent
   autocmd InsertLeave setlocal autoindent
+  autocmd BufEnter * setlocal formatoptions-=t formatoptions-=o
 augroup END
-
-" autocmd BufEnter * setlocal foldmethod=expr | setlocal foldexpr=nvim_treesitter#foldexpr()
 
 " resize on launch with terminal
 autocmd VimEnter * :silent exec "!kill -s SIGWINCH $PPID"
@@ -1377,6 +1374,7 @@ require("nvim-treesitter.configs").setup({
         "vue",
         "yaml",
         "html",
+        "twig",
         "php",
         "phpdoc",
         "css",
@@ -1588,7 +1586,9 @@ require("mason-lspconfig").setup({
 
 
 local function root_dir(pattern, bufnr, cwd)
-    local home = vim.fn.expand("~")
+    -- local home = vim.fn.expand("~")
+    -- TODO
+    local home = '/home/tobias'
     if cwd == nil then
         cwd = require("lspconfig.util").root_pattern(".git")(pattern)
         if cwd == home or cwd == nil then
@@ -1653,7 +1653,7 @@ nvim_lsp.vimls.setup({
     root_dir = root_dir,
     on_attach = on_attach,
 })
-nvim_lsp.sumneko_lua.setup({
+nvim_lsp.lua_ls.setup({
     capabilities = capabilities,
     root_dir = root_dir,
     on_attach = on_attach,
