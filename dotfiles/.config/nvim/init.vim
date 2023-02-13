@@ -617,12 +617,12 @@ require("nvim-tree").setup({
                 { key = "<C-k>", action = "toggle_file_info" },
                 { key = ".", action = "run_file_command" },
                 {
-                    key = "<A-t>",
+                    key = "<A-f>",
                     action = "grep_dir",
                     action_cb = function(node)
                         require("telescope.builtin").live_grep({
                             prompt_title = "Live Grep (" .. node.absolute_path .. ")",
-                            additional_args = { "--unrestricted" },
+                            additional_args = { "--unrestricted", "--hidden" },
                             search_dirs = { node.absolute_path },
                         })
                     end,
