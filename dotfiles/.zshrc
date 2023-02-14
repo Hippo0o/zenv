@@ -156,11 +156,11 @@ ex ()
 }
 
 path-to-id() {
-    echo "$(echo ${$(realpath $1)//\//__} | rev | cut -c -70 | rev)"
+    echo "${$(echo ${$(realpath $1)//\//__} | rev | cut -c -50 | rev)##__}"
 }
 
 vis() {
-    cd "$1" && abduco -e ^z -A "$(path-to-id $(pwd))" vi $2 +'SessionManager load_current_dir_session'
+    cd "$1" && abduco -e ^z -A "vis_$(path-to-id $(pwd))" vi $2 +'SessionManager load_current_dir_session'
     cd -
 }
 sis() {
@@ -188,6 +188,12 @@ git-acp() {
 
 duh() {
     du -d 1 -h $@ | sort -h
+}
+
+e() {
+    ID=$(path-to-id $(pwd))
+    [ -z $(docker ps -a -f name=$ID -q) ] && docker run -it -d --name=$ID -u $HOST_USER -v "$(pwd):/workdir" $@ zenv zsh
+    docker start -i $ID
 }
 
 j() {

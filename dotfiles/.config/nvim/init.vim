@@ -613,11 +613,11 @@ require("nvim-tree").setup({
                 { key = "q", action = "close" },
                 { key = "g?", action = "toggle_help" },
                 { key = "W", action = "collapse_all" },
-                { key = "<C-f>", action = "search_node" },
+                { key = "<C-F>", action = "search_node" },
                 { key = "<C-k>", action = "toggle_file_info" },
                 { key = ".", action = "run_file_command" },
                 {
-                    key = "<A-f>",
+                    key = "<C-f>",
                     action = "grep_dir",
                     action_cb = function(node)
                         require("telescope.builtin").live_grep({
