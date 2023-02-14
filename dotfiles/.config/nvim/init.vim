@@ -191,6 +191,7 @@ tmap <A-T> <C-\><C-N><A-T>
 tnoremap <expr> <A-r> '<C-\><C-N>"'.nr2char(getchar()).'pi'
 
 command! ScratchBuffer new | setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile
+command! -nargs=1 CompareRemote execute "vertical diffsplit " . <q-args> . "/" . expand('%:.') | wincmd p
 
 " colorscheme settings
 set background=dark
@@ -1672,7 +1673,13 @@ nvim_lsp.html.setup({
     capabilities = capabilities,
     root_dir = root_dir,
     on_attach = on_attach,
-    filetypes = { "html", "twig" },
+    filetypes = { "html", "twig", "blade" },
+})
+nvim_lsp.emmet_ls.setup({
+    capabilities = capabilities,
+    root_dir = root_dir,
+    on_attach = on_attach,
+    filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "eruby", "twig" },
 })
 nvim_lsp.lemminx.setup({
     capabilities = capabilities,
@@ -1772,12 +1779,6 @@ nvim_lsp.intelephense.setup({
             },
         },
     },
-})
-nvim_lsp.emmet_ls.setup({
-    capabilities = capabilities,
-    root_dir = root_dir,
-    on_attach = on_attach,
-    filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "eruby", "twig" },
 })
 nvim_lsp.bashls.setup({
     capabilities = capabilities,
