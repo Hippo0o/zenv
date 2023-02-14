@@ -191,7 +191,7 @@ tmap <A-T> <C-\><C-N><A-T>
 tnoremap <expr> <A-r> '<C-\><C-N>"'.nr2char(getchar()).'pi'
 
 command! ScratchBuffer new | setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile
-command! -nargs=1 CompareRemote execute "vertical diffsplit " . <q-args> . "/" . expand('%:.') | wincmd p
+command! -nargs=1 CompareRemote execute "diffsplit " . <q-args> . "/" . expand('%:.')
 
 " colorscheme settings
 set background=dark
