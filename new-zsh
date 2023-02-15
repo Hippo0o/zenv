@@ -1,2 +1,4 @@
 #!/bin/sh
-zsh ${@:2}
+cmd=${@:2}
+
+[ -z "$cmd" ] && zsh || zsh -c "$cmd"
