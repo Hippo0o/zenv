@@ -63,7 +63,7 @@ RUN mkdir -p /root/.cache/oh-my-zsh
 # install tools
 RUN pacman -Syu --noconfirm --needed \
     ttf-nerd-fonts-symbols-1000-em-mono otf-firamono-nerd \
-    direnv abduco fd ripgrep fzf \
+    direnv abduco fd ripgrep fzf jq \
     wl-clipboard \
     htop
 

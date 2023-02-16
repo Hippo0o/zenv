@@ -57,7 +57,7 @@ call plug#begin('/usr/share/nvim/plugged')
   Plug 'neovim/nvim-lspconfig'
   Plug 'jose-elias-alvarez/null-ls.nvim'
   Plug 'LostNeophyte/null-ls-embedded'
-  Plug 'github/copilot.vim', {'commit': '324ec9eb69e20971b58340d0096c3caac7bc2089'}
+  Plug 'github/copilot.vim'
   " Plug 'Hippo0o/copilot.lua'
   Plug 'hrsh7th/nvim-cmp'
   Plug 'ray-x/cmp-treesitter'
@@ -116,6 +116,7 @@ set expandtab
 set incsearch
 set laststatus=3
 set noshowmode
+set noautoindent
 set smartcase
 set ignorecase
 " |—
@@ -154,13 +155,13 @@ let g:cursorhold_updatetime=100
 
 augroup force_settings
   autocmd!
-  autocmd InsertEnter setlocal noautoindent
-  autocmd InsertLeave setlocal autoindent
-  autocmd BufEnter * setlocal formatoptions-=t formatoptions-=o
+  autocmd BufEnter * setlocal formatoptions-=t formatoptions-=o noautoindent
 augroup END
 
 " resize on launch with terminal
 autocmd VimEnter * :silent exec "!kill -s SIGWINCH $PPID"
+
+autocmd VimEnter * :clearjumps
 
 autocmd VimResized * :wincmd =
 
@@ -1006,8 +1007,8 @@ local function enhanced_macro()
 
     local function insert_enter()
         if insert_entered then
-            vim.cmd.normal({ bang = true, "q" })
             local is_end_of_line = (vim.fn.col(".") == vim.fn.col("$"))
+            vim.cmd.normal({ bang = true, "q" })
             if is_end_of_line then
                 return vim.api.nvim_feedkeys(key_right, "n", false)
             end
