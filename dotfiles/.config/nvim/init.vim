@@ -41,12 +41,10 @@ call plug#begin('/usr/share/nvim/plugged')
   Plug 'andymass/vim-matchup'
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
   Plug 'nvim-treesitter/playground'
-  Plug 'nvim-treesitter/nvim-treesitter-context'
   Plug 'JoosepAlviste/nvim-ts-context-commentstring'
   Plug 'ckolkey/ts-node-action'
   Plug 'wellle/context.vim'
   Plug 'mizlan/iswap.nvim'
-  Plug 'windwp/nvim-ts-autotag'
   Plug 'm-demare/hlargs.nvim'
   Plug 'p00f/nvim-ts-rainbow'
   Plug 'numToStr/Comment.nvim'
@@ -116,8 +114,8 @@ set expandtab
 set incsearch
 set laststatus=3
 set noshowmode
-set noautoindent
-set smartcase
+set autoindent
+set nosmartcase
 set ignorecase
 " |—
 set listchars=tab:├─,trail:~,extends:>,precedes:<
@@ -155,7 +153,7 @@ let g:cursorhold_updatetime=100
 
 augroup force_settings
   autocmd!
-  autocmd BufEnter * setlocal formatoptions-=t formatoptions-=o noautoindent
+  autocmd BufEnter * setlocal formatoptions-=t formatoptions-=o indentkeys=
 augroup END
 
 " resize on launch with terminal
@@ -514,8 +512,8 @@ require("telescope").setup({
             mappings = {
                 i = {
                     ["<cr>"] = require("telescope-undo.actions").yank_additions,
-                    ["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
-                    ["<A-cr>"] = require("telescope-undo.actions").restore,
+                    ["<A-cr>"] = require("telescope-undo.actions").yank_deletions,
+                    ["<A-BS>"] = require("telescope-undo.actions").restore,
                 },
             },
         },
@@ -1054,12 +1052,12 @@ end
 local em = enhanced_macro()
 em.setup()
 
-vim.keymap.set({ "v", "n" }, "<leader>c", function()
+vim.keymap.set({ "v", "n" }, "\\", function()
     vim.api.nvim_feedkeys("*", "t", false)
     em.start_macro()
     vim.api.nvim_feedkeys("gn", "t", false)
 end)
-vim.keymap.set({ "v", "n" }, "<leader>C", function()
+vim.keymap.set({ "v", "n" }, "|", function()
     vim.api.nvim_feedkeys("*", "t", false)
     em.start_macro()
     vim.api.nvim_feedkeys("gN", "t", false)
@@ -1414,17 +1412,6 @@ require("nvim-treesitter.configs").setup({
             node_decremental = "V",
         },
     },
-    autotag = {
-        enable = false,
-    },
-    rainbow = {
-        enable = false,
-        -- disable = { "jsx", "cpp" }, list of languages you want to disable the plugin for
-        extended_mode = { "vue", "html" }, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
-        max_file_lines = nil, -- Do not enable for files with more than n lines, int
-        -- colors = {"#BEA470", "#54A857", "#359FF4", "#5060BB", "#179387"}, -- table of hex strings
-        -- termcolors = {} -- table of colour name strings
-    },
 })
 
 
@@ -1432,11 +1419,6 @@ require('hlargs').setup {
     highlight = {
         link = '@parameter',
     },
-}
-
-
-require('treesitter-context').setup {
-    enable = false,
 }
 
 
