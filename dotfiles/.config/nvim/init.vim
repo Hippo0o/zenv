@@ -114,7 +114,6 @@ set expandtab
 set incsearch
 set laststatus=3
 set noshowmode
-set autoindent
 set nosmartcase
 set ignorecase
 " |—
@@ -153,7 +152,7 @@ let g:cursorhold_updatetime=100
 
 augroup force_settings
   autocmd!
-  autocmd BufEnter * setlocal formatoptions-=t formatoptions-=o indentkeys=
+  autocmd BufEnter * setlocal formatoptions-=t formatoptions-=o indentkeys= autoindent
 augroup END
 
 " resize on launch with terminal
