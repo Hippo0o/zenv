@@ -88,7 +88,7 @@ WORKDIR /workdir
 COPY ./entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 
-COPY ./new-zsh /new-zsh
-COPY ./kill-zsh /kill-zsh
+COPY ./new-exec /new-exec
+COPY ./kill-exec /kill-exec
 
 CMD ["sleep", "inf"]

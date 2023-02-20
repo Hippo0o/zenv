@@ -1,4 +1,0 @@
-#!/bin/sh
-echo $1
-ps -eaf -o pid,cmd | grep new-zsh | grep $1
-kill $(ps -eaf -o pid,cmd | grep new-zsh | grep $1 | awk '{print $1}')
