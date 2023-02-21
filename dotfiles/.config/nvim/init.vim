@@ -1863,12 +1863,13 @@ null_ls.setup({
 -- Autocompletion
 -- luasnip setup
 local luasnip = require("luasnip")
-luasnip.config.setup({
-    updateevents = "TextChanged,TextChangedI,InsertLeave",
+luasnip.setup({
+    update_events = "TextChanged,TextChangedI,InsertLeave",
     region_check_events = "InsertEnter,CursorHold",
+    ft_func = require("luasnip.extras.filetype_functions").from_cursor_pos
 })
 
-require("luasnip.loaders.from_vscode").lazy_load()
+require("luasnip.loaders.from_vscode").load()
 -- stupidly complicated snippet definitions
 luasnip.add_snippets("php", {
     luasnip.snippet("p", {
