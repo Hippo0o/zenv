@@ -1868,8 +1868,10 @@ luasnip.setup({
     region_check_events = "InsertEnter,CursorHold",
     ft_func = require("luasnip.extras.filetype_functions").from_cursor_pos
 })
+vim.defer_fn(function()
+  require("luasnip.loaders.from_vscode").load()
+end, 100)
 
-require("luasnip.loaders.from_vscode").load()
 -- stupidly complicated snippet definitions
 luasnip.add_snippets("php", {
     luasnip.snippet("p", {

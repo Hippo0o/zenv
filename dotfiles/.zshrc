@@ -200,6 +200,10 @@ e() {
     docker start -i $ID
 }
 
+s() {
+    docker run -it --rm -u root -v "/:/workdir" zenv $@
+}
+
 j() {
     docker run -it --rm -u $HOST_USER -v "$(pwd):/workdir" $@ zenv zsh
 }
