@@ -55,7 +55,7 @@ call plug#begin('/usr/share/nvim/plugged')
   Plug 'neovim/nvim-lspconfig'
   Plug 'jose-elias-alvarez/null-ls.nvim'
   Plug 'LostNeophyte/null-ls-embedded'
-  Plug 'github/copilot.vim'
+  Plug 'github/copilot.vim', {'commit': '324ec9eb69e20971b58340d0096c3caac7bc2089'}
   " Plug 'Hippo0o/copilot.lua'
   Plug 'hrsh7th/nvim-cmp'
   Plug 'ray-x/cmp-treesitter'
@@ -463,6 +463,7 @@ require("telescope").setup({
             "--color=never",
             "--no-heading",
             "--with-filename",
+            "--fixed-strings",
             "--line-number",
             "--column",
             "--smart-case",
@@ -1864,9 +1865,16 @@ null_ls.setup({
 -- luasnip setup
 local luasnip = require("luasnip")
 luasnip.setup({
-    update_events = "TextChanged,TextChangedI,InsertLeave",
-    region_check_events = "InsertEnter,CursorHold",
-    ft_func = require("luasnip.extras.filetype_functions").from_cursor_pos
+    update_events = { 'TextChanged', 'TextChangedI', 'InsertLeave' },
+    region_check_events = { 'InsertEnter', 'CursorHold' },
+    ft_func = function()
+        local ft = require("luasnip.extras.filetype_functions").from_cursor_pos()
+        if #ft > 0 then
+            return ft
+        end
+
+        return require("luasnip.extras.filetype_functions").from_filetype()
+    end
 })
 vim.defer_fn(function()
   require("luasnip.loaders.from_vscode").load()
