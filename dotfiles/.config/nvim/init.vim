@@ -69,7 +69,7 @@ call plug#begin('/usr/share/nvim/plugged')
   Plug 'onsails/lspkind-nvim'
   Plug 'SmiteshP/nvim-navic'
   Plug 'saadparwaiz1/cmp_luasnip'
-  Plug 'L3MON4D3/LuaSnip'
+  Plug 'L3MON4D3/LuaSnip', {'do': 'make install_jsregexp'}
   Plug 'rafamadriz/friendly-snippets'
   Plug 'phiter/phpstorm-snippets-for-vscode'
   Plug 'sdras/vue-vscode-snippets'
@@ -1556,7 +1556,7 @@ end
 
 -- mason
 require("mason").setup({
-    install_root_dir = '/usr/share/share/nvim/mason',
+    install_root_dir = '/usr/share/nvim/mason',
     ui = {
         icons = {
             package_installed = "✓",
@@ -1876,6 +1876,9 @@ luasnip.setup({
         return require("luasnip.extras.filetype_functions").from_filetype()
     end
 })
+
+vim.keymap.set({ "i", "c" }, "<C-l>", luasnip.expand_or_jump)
+
 vim.defer_fn(function()
   require("luasnip.loaders.from_vscode").load()
 end, 100)
@@ -1901,21 +1904,6 @@ luasnip.add_snippets("php", {
 -- nvim-cmp setup
 local cmp = require("cmp")
 
--- cmp-tabnine
--- local tabnine = require("cmp_tabnine.config")
--- tabnine:setup({
---     max_lines = 1000,
---     max_num_results = 20,
---     sort = true,
---     run_on_every_keystroke = false,
---     snippet_placeholder = "..",
---     ignored_file_types = { -- default is not to ignore
---         -- uncomment to ignore in lua:
---         -- lua = true
---     },
---     show_prediction_strength = true,
--- })
-
 local mapping = {
     ["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
     ["<Down>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
@@ -1936,41 +1924,28 @@ local mapping = {
         end
     end, { "i", "c" }),
     ["<Tab>"] = cmp.mapping({
-        c = function()
+        i = function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            else
+                fallback()
+            end
+        end,
+        c = function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
             else
                 cmp.complete()
             end
-        end,
-        i = function(fallback)
-            if cmp.visible() then
-                cmp.select_next_item()
-            elseif luasnip.jumpable() then
-                luasnip.expand_or_jump()
-            else
-                fallback()
-            end
-        end,
-        s = function(fallback)
-            if cmp.visible() then
-                cmp.select_next_item()
-            elseif luasnip.jumpable() then
-                luasnip.expand_or_jump()
-            else
-                fallback()
-            end
-        end,
+        end
     }),
     ["<S-Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
             cmp.select_prev_item()
-        elseif luasnip.jumpable(-1) then
-            luasnip.jump(-1)
         else
             fallback()
         end
-    end, { "i", "c", "s" }),
+    end, { "i", "c" }),
 }
 local lspkind = require("lspkind")
 local source_mapping = {

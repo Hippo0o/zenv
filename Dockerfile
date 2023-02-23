@@ -54,8 +54,9 @@ COPY --chown=${USER}:${USER} user-dotfiles /user-dotfiles
 COPY sync-dotfiles.sh /sync-dotfiles.sh
 RUN /sync-dotfiles.sh
 
-RUN PLUG_INSTALL=1 nvim --headless +PlugInstall +qall
-RUN nvim --headless +'MasonInstall bash-language-server clangd emmet-ls html-lsp intelephense jdtls json-lsp lemminx lua-language-server marksman pyright sqls tailwindcss-language-server typescript-language-server vim-language-server vue-language-server' +qall
+COPY nvim-setup.sh /nvim-setup.sh
+RUN /nvim-setup.sh
+
 RUN rm -rf /root/.cache
 RUN mkdir -p /root/.ssh/sockets
 RUN mkdir -p /root/.cache/oh-my-zsh
