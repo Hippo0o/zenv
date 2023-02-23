@@ -1866,6 +1866,7 @@ null_ls.setup({
 local luasnip = require("luasnip")
 luasnip.setup({
     update_events = { 'TextChanged', 'TextChangedI', 'InsertLeave' },
+    delete_check_events = { 'InsertLeave', 'CursorHold' },
     region_check_events = { 'InsertEnter', 'CursorHold' },
     ft_func = function()
         local ft = require("luasnip.extras.filetype_functions").from_cursor_pos()
@@ -1877,7 +1878,16 @@ luasnip.setup({
     end
 })
 
-vim.keymap.set({ "i", "c" }, "<C-l>", luasnip.expand_or_jump)
+vim.keymap.set({ "i", "s" }, "<C-p>", function ()
+  if luasnip.locally_jumpable(-1) then
+    luasnip.jump(-1)
+  end
+end)
+vim.keymap.set({ "i", "s" }, "<C-n>", function ()
+  if luasnip.locally_jumpable(1) then
+    luasnip.jump(1)
+  end
+end)
 
 vim.defer_fn(function()
   require("luasnip.loaders.from_vscode").load()
