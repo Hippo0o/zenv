@@ -36,7 +36,7 @@ call plug#begin('/usr/share/nvim/plugged')
   Plug 'tpope/vim-fugitive'
   Plug 'sindrets/diffview.nvim'
   Plug 'NvChad/nvim-colorizer.lua'
-  Plug 'aaron-p1/match-visual.nvim'
+  " Plug 'aaron-p1/match-visual.nvim'
   Plug 'AndrewRadev/inline_edit.vim'
   Plug 'levouh/tint.nvim'
   Plug 'andymass/vim-matchup'
@@ -208,6 +208,9 @@ highlight Search guifg=#e4e4e4 guibg=#00875f
 " highlight IncSearch guifg=#e3c78a guibg=#444444
 highlight! link CurSearch IncSearch
 highlight link FloatTitle MoonflyGrey241
+
+highlight DiffAdd guifg=NONE guibg=#103b2c
+highlight DiffText guifg=NONE guibg=#00326f
 
 highlight LspReferenceText gui=bold guibg=#202426
 highlight LspReferenceRead gui=bold guibg=#202426
@@ -770,6 +773,18 @@ function close_all_floating(force)
             end
         end
     end
+end
+
+
+-- suppress error messages
+local _schedule = vim.schedule
+vim.schedule = function(f)
+    _schedule(function()
+        local ok, err = pcall(f)
+        if not ok then
+            print("Error in schedule", err)
+        end
+    end)
 end
 
 -- function buffer_file_size_below(buf, max_file_size)
@@ -1891,7 +1906,7 @@ end)
 
 vim.defer_fn(function()
   require("luasnip.loaders.from_vscode").load()
-end, 100)
+end, 3000)
 
 -- stupidly complicated snippet definitions
 luasnip.add_snippets("php", {
