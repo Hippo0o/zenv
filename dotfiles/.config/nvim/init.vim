@@ -45,7 +45,7 @@ call plug#begin('/usr/share/nvim/plugged')
   Plug 'JoosepAlviste/nvim-ts-context-commentstring'
   Plug 'ckolkey/ts-node-action'
   Plug 'wellle/context.vim'
-  Plug 'mizlan/iswap.nvim'
+  Plug 'Hippo0o/iswap.nvim'
   Plug 'm-demare/hlargs.nvim'
   Plug 'numToStr/Comment.nvim'
   Plug 'Darazaki/indent-o-matic'
