@@ -23,6 +23,7 @@ call plug#begin('/usr/share/nvim/plugged')
   Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
   Plug 'anuvyklack/middleclass'
   Plug 'anuvyklack/windows.nvim'
+  Plug 'sindrets/winshift.nvim'
   Plug 'mrjones2014/legendary.nvim'
   Plug 'folke/which-key.nvim'
   Plug 'mfussenegger/nvim-dap'
@@ -203,7 +204,7 @@ highlight Normal guibg=#1b1e20
 highlight NormalFloat guibg=#202426
 highlight FloatBorder guibg=#202426
 highlight LineNr guifg=#aaaaaa
-highlight IncSearch guifg=#e4e4e4 guibg=#36c692
+highlight IncSearch guifg=#e4e4e4 guibg=#80a0ff
 highlight Search guifg=#e4e4e4 guibg=#00875f
 " highlight IncSearch guifg=#e3c78a guibg=#444444
 highlight! link CurSearch IncSearch
@@ -229,10 +230,10 @@ nnoremap <A-h> <c-w>h
 nnoremap <A-j> <c-w>j
 nnoremap <A-k> <c-w>k
 nnoremap <A-l> <c-w>l
-nnoremap <A-H> <c-w>H
-nnoremap <A-J> <c-w>J
-nnoremap <A-K> <c-w>K
-nnoremap <A-L> <c-w>L
+nnoremap <A-H> <cmd>WinShift left<CR>
+nnoremap <A-J> <cmd>WinShift down<CR>
+nnoremap <A-K> <cmd>WinShift up<CR>
+nnoremap <A-L> <cmd>WinShift right<CR>
 nnoremap <silent> <A-v> <cmd>vsplit<CR>
 nnoremap <silent> <A-s> <cmd>split<CR>
 nnoremap <silent> <A-w> <cmd>windo bwipeout!<CR>
@@ -482,8 +483,7 @@ require("telescope").setup({
         preview = {
             filesize_limit = 1, -- 1mb
             -- treesitter = false,
-        },
-        prompt_prefix = "", -- workaround buggy prompt buffers
+        }
     },
     extensions = {
         live_grep_args = {
