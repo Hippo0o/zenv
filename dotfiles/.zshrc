@@ -1,4 +1,5 @@
 if [[ $(id -u) -eq 0 ]]; then
+    /sync-dotfiles.sh > /dev/null &
     su $HOST_USER
 fi
 
