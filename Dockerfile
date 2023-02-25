@@ -60,7 +60,7 @@ RUN /nvim-setup.sh
 RUN rm -rf /root/.cache
 RUN mkdir -p /root/.ssh/sockets
 RUN mkdir -p /root/.cache/oh-my-zsh
-RUN mkdir -p ${CONTAINER_HOME}/.cache/oh-my-zsh && chown -R ${USER}:${USER} ${CONTAINER_HOME}/.cache/oh-my-zsh
+RUN mkdir -p ${CONTAINER_HOME}/.cache/oh-my-zsh && chown -R ${USER}:${USER} ${CONTAINER_HOME}/.cache
 
 # install tools
 RUN pacman -Syu --noconfirm --needed \
@@ -91,5 +91,6 @@ ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 
 COPY ./new-exec /new-exec
 COPY ./kill-exec /kill-exec
+COPY ./user-shell /user-shell
 
 CMD ["sleep", "inf"]

@@ -1,0 +1,4 @@
+#!/bin/zsh
+su $HOST_USER
+# drop to root
+zsh
