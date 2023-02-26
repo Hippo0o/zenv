@@ -99,6 +99,35 @@ if exists('$PLUG_INSTALL')
   finish
 endif
 
+" suppress error messages
+lua << EOF
+local _schedule = vim.schedule
+vim.schedule = function(f)
+    _schedule(function()
+        local ok, err = pcall(f)
+        if not ok then
+            print("Error in schedule", err)
+        end
+    end)
+end
+local _nvim_create_autocmd = vim.api.nvim_create_autocmd
+vim.api.nvim_create_autocmd = function(event, opts)
+    for k, v in pairs(opts) do
+        -- if value is a function
+        if type(v) == "function" then
+            -- wrap it in a pcall
+            opts[k] = function(...)
+                local ok, err = pcall(v, ...)
+                if not ok then
+                    print("Error in autocmd", err)
+                end
+            end
+        end
+    end
+    _nvim_create_autocmd(event, opts)
+end
+EOF
+
 lua require('impatient')
 
 syntax on
@@ -480,6 +509,7 @@ require("telescope").setup({
         --       flip_lines = 40,
         --   }
         -- },
+        prompt_prefix = "",
         preview = {
             filesize_limit = 1, -- 1mb
             -- treesitter = false,
@@ -773,18 +803,6 @@ function close_all_floating(force)
             end
         end
     end
-end
-
-
--- suppress error messages
-local _schedule = vim.schedule
-vim.schedule = function(f)
-    _schedule(function()
-        local ok, err = pcall(f)
-        if not ok then
-            print("Error in schedule", err)
-        end
-    end)
 end
 
 -- function buffer_file_size_below(buf, max_file_size)
