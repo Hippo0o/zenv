@@ -101,6 +101,7 @@ endif
 
 " suppress error messages
 lua << EOF
+error = function()  end
 local _schedule = vim.schedule
 vim.schedule = function(f)
     _schedule(function()
