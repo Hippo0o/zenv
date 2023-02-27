@@ -885,7 +885,9 @@ vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
         if vim.api.nvim_win_get_config(0).relative ~= "" then
             return
         end
-        text_changed = true
+        if vim.bo.buftype ~= "terminal" and vim.bo.buftype ~= "nofile" then
+            text_changed = true
+        end
     end,
 })
 local function handle_text_changed(buf)
