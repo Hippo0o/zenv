@@ -1150,6 +1150,19 @@ require("oil").setup({
         end
       end,
     },
+    ["<c-f>"] = {
+      desc = "Open a live_grep in the current directory",
+      callback = function()
+        local dir = require("oil").get_current_dir()
+        if dir then
+          require("telescope.builtin").live_grep({
+            prompt_title = "Live Grep (" .. dir .. ")",
+            additional_args = { "--unrestricted", "--hidden" },
+            search_dirs = { dir },
+          })
+        end
+      end,
+    },
   },
 })
 EOF

@@ -66,7 +66,7 @@ RUN mkdir -p ${CONTAINER_HOME}/.cache/oh-my-zsh && chown -R ${USER}:${USER} ${CO
 RUN pacman -Syu --noconfirm --needed \
     direnv abduco fd ripgrep fzf jq \
     wl-clipboard \
-    htop
+    htop strace
 
 # system settings
 COPY ./ssh_config /etc/ssh/ssh_config
