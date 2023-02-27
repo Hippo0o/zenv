@@ -197,7 +197,7 @@ e() {
 }
 
 s() {
-    docker run -it --rm -u root -v "/:/workdir" zenv $@
+    docker run -it --rm -u root -v "/:/system" -w "/system" zenv $@
 }
 
 j() {
