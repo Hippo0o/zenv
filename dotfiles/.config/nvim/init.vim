@@ -183,7 +183,7 @@ let g:cursorhold_updatetime=100
 
 augroup force_settings
   autocmd!
-  autocmd BufEnter * setlocal formatoptions-=t formatoptions-=o indentkeys= autoindent
+  autocmd BufEnter * setlocal formatoptions-=j formatoptions-=t formatoptions-=o indentkeys= autoindent
 augroup END
 
 " resize on launch with terminal
@@ -301,7 +301,9 @@ inoremap <Up> <C-o>gk
 " vnoremap <S-Up> :m '<-2<CR>gv=gv
 
 nnoremap y "+y
+nnoremap Y "+y$
 vnoremap y "+y
+vnoremap Y "+Y
 vnoremap x "+x
 map <leader>p o<Esc>p
 map <leader>P O<Esc>p
@@ -474,6 +476,7 @@ nnoremap <A-u> <cmd>Telescope undo<cr>
 nnoremap <A-p> <cmd>Telescope git_files recurse_submodules=true show_untracked=false<cr>
 vnoremap <A-p> "zy<cmd>exec 'Telescope git_files recurse_submodules=true show_untracked=false default_text=' . escape(@z, ' ')<cr>
 nnoremap <A-P> <cmd>Telescope find_files hidden=true no_ignore=true<cr>
+nnoremap <A-P> <cmd>lua require('telescope.builtin').find_files({find_command = { "fd", "--hidden", "--strip-cwd-prefix", "--no-ignore" }})<cr>
 vnoremap <A-P> "zy<cmd>exec 'Telescope find_files hidden=true no_ignore=true default_text=' . escape(@z, ' ')<cr>
 nnoremap <A-F> <cmd>lua require("telescope").extensions.live_grep_args.live_grep_args()<cr>
 nnoremap <A-f> <cmd>Telescope live_grep<cr>
@@ -994,34 +997,6 @@ require("session_manager").setup({
 
 vim.keymap.set("n", "<leader>fml", "<cmd>CellularAutomaton make_it_rain<CR>")
 
-
--- mini.nvim
-require('mini.ai').setup()
-require('mini.align').setup()
-require('mini.indentscope').setup({
-  draw = {
-    delay = 100,
-    animation = require('mini.indentscope').gen_animation.none()
-  },
-  symbol = '│'
-})
-require('mini.move').setup({
-  mappings = {
-    -- Move visual selection in Visual mode. Defaults are Alt (Meta) + hjkl.
-    left = '<S-Left>',
-    right = '<S-Right>',
-    down = '<S-Down>',
-    up = '<S-Up>',
-
-    -- Move current line in Normal mode
-    line_left = '<S-Left>',
-    line_right = '<S-Right>',
-    line_down = '<S-Down>',
-    line_up = '<S-Up>',
-  },
-})
-
-
 -- better-macro
 local function enhanced_macro()
     local namespace = vim.api.nvim_create_namespace("MacroInsertPaste")
@@ -1102,6 +1077,39 @@ require 'term-edit'.setup {
     prompt_end = '❯ ',
     mapping = { n = { s = false, S = false }, x = { s = false, S = false }, v = { s = false, S = false } }
 }
+EOF
+
+
+" mini.nvim
+hi! link MiniCursorwordCurrent LspReferenceText
+hi! link MiniCursorword LspReferenceText
+lua <<EOF
+require('mini.ai').setup()
+require('mini.align').setup()
+require('mini.bracketed').setup()
+require('mini.cursorword').setup()
+require('mini.indentscope').setup({
+  draw = {
+    delay = 100,
+    animation = require('mini.indentscope').gen_animation.none()
+  },
+  symbol = '│'
+})
+require('mini.move').setup({
+  mappings = {
+    -- Move visual selection in Visual mode. Defaults are Alt (Meta) + hjkl.
+    left = '<S-Left>',
+    right = '<S-Right>',
+    down = '<S-Down>',
+    up = '<S-Up>',
+
+    -- Move current line in Normal mode
+    line_left = '<S-Left>',
+    line_right = '<S-Right>',
+    line_down = '<S-Down>',
+    line_up = '<S-Up>',
+  },
+})
 EOF
 
 
@@ -1626,21 +1634,21 @@ local function on_attach(client, bufnr)
     vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
     if client.server_capabilities.documentHighlightProvider then
-        vim.api.nvim_create_autocmd("CursorHold", {
-            callback = function()
-                for _, client in ipairs(vim.lsp.get_active_clients({ bufnr = bufnr })) do
-                    if client.server_capabilities.documentHighlightProvider then
-                        vim.lsp.buf.document_highlight()
-                        return
-                    end
-                end
-            end,
-            buffer = bufnr,
-        })
-        vim.api.nvim_create_autocmd("CursorMoved", {
-            callback = vim.lsp.buf.clear_references,
-            buffer = bufnr,
-        })
+        -- vim.api.nvim_create_autocmd("CursorHold", {
+        --     callback = function()
+        --         for _, client in ipairs(vim.lsp.get_active_clients({ bufnr = bufnr })) do
+        --             if client.server_capabilities.documentHighlightProvider then
+        --                 vim.lsp.buf.document_highlight()
+        --                 return
+        --             end
+        --         end
+        --     end,
+        --     buffer = bufnr,
+        -- })
+        -- vim.api.nvim_create_autocmd("CursorMoved", {
+        --     callback = vim.lsp.buf.clear_references,
+        --     buffer = bufnr,
+        -- })
     end
     -- print(vim.inspect(client.server_capabilities))
     if client.server_capabilities.documentSymbolProvider == true then
