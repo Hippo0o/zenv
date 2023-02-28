@@ -475,9 +475,8 @@ nnoremap <A-m> <cmd>Telescope marks<cr>
 nnoremap <A-u> <cmd>Telescope undo<cr>
 nnoremap <A-p> <cmd>Telescope git_files recurse_submodules=true show_untracked=false<cr>
 vnoremap <A-p> "zy<cmd>exec 'Telescope git_files recurse_submodules=true show_untracked=false default_text=' . escape(@z, ' ')<cr>
-nnoremap <A-P> <cmd>Telescope find_files hidden=true no_ignore=true<cr>
-nnoremap <A-P> <cmd>lua require('telescope.builtin').find_files({find_command = { "fd", "--hidden", "--strip-cwd-prefix", "--no-ignore" }})<cr>
-vnoremap <A-P> "zy<cmd>exec 'Telescope find_files hidden=true no_ignore=true default_text=' . escape(@z, ' ')<cr>
+nnoremap <A-P> <cmd>Telescope find_files<cr>
+vnoremap <A-P> "zy<cmd>exec 'Telescope find_files default_text=' . escape(@z, ' ')<cr>
 nnoremap <A-F> <cmd>lua require("telescope").extensions.live_grep_args.live_grep_args()<cr>
 nnoremap <A-f> <cmd>Telescope live_grep<cr>
 vnoremap <A-f> "zy<cmd>exec 'Telescope live_grep default_text=' . escape(@z, ' ')<cr>
@@ -488,7 +487,7 @@ vnoremap <A-o> "zy<cmd>exec 'Telescope lsp_document_symbols default_text=' . esc
 nnoremap <A-O> <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
 vnoremap <A-O> "zy<cmd>exec 'Telescope lsp_dynamic_workspace_symbols default_text=' . escape(@z, ' ')<cr>
 nnoremap <A-Bs> <cmd>Telescope resume<cr>
-nnoremap <A-Tab> <cmd>lua require('telescope.builtin').buffers({ sort_lastused = true, ignore_current_buffer = true })<cr>
+nnoremap <A-Tab> <cmd>Telescope buffers<cr>
 highlight link TelescopeBorder FloatBorder
 highlight link TelescopeNormal NormalFloat
 highlight link TelescopeTitle FloatTitle
@@ -518,6 +517,23 @@ require("telescope").setup({
             filesize_limit = 1, -- 1mb
             -- treesitter = false,
         }
+    },
+    pickers = {
+        find_files = {
+            find_command = { "fd", "--hidden", "--strip-cwd-prefix", "--no-ignore" },
+        },
+        buffers = {
+            sort_lastused = true,
+            ignore_current_buffer = true,
+            mappings = {
+                i = {
+                    ["<A-BS>"] = require("telescope.actions").delete_buffer,
+                },
+                n = {
+                    ["<BS>"] = require("telescope.actions").delete_buffer,
+                },
+            },
+        },
     },
     extensions = {
         live_grep_args = {
@@ -654,6 +670,15 @@ require("nvim-tree").setup({
                 { key = "<C-F>", action = "search_node" },
                 { key = "<C-k>", action = "toggle_file_info" },
                 { key = ".", action = "run_file_command" },
+                {
+                    key = "<A-p>",
+                    action = "find_files",
+                    action_cb = function(node)
+                        require('telescope.builtin').find_files({
+                            find_command = { "fd", "--hidden", "--strip-cwd-prefix", "--no-ignore" }
+                        })
+                    end,
+                },
                 {
                     key = "<C-f>",
                     action = "grep_dir",
