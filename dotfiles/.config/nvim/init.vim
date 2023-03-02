@@ -101,6 +101,10 @@ endif
 
 " suppress error messages
 lua << EOF
+local _error = error
+error = function(msg)
+  pcall(_error, msg)
+end
 local _schedule = vim.schedule
 vim.schedule = function(f)
     _schedule(function()
@@ -515,6 +519,14 @@ require("telescope").setup({
         preview = {
             filesize_limit = 1, -- 1mb
             -- treesitter = false,
+        },
+        mappings = {
+          i = {
+              ["<F1>"] = "which_key"
+          },
+          n = {
+              ["<F1>"] = "which_key"
+          },
         }
     },
     pickers = {
