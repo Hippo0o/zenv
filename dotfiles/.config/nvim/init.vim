@@ -79,7 +79,6 @@ call plug#begin('/usr/share/nvim/plugged')
   Plug 'Hippo0o/pounce.nvim'
   Plug 'rhysd/clever-f.vim'
   Plug 'machakann/vim-sandwich'
-  Plug 'kylechui/nvim-surround'
   " Plug 'simnalamburt/vim-mundo'
   Plug 'monaqa/dial.nvim'
   Plug 'windwp/nvim-spectre'
