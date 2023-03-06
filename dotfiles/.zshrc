@@ -211,7 +211,7 @@ u() {
 hs() {
     SESSION_ID=h_${$(echo $@)//\//__}
     SESSION_ID=${${SESSION_ID}// /+}
-    abduco -e ^z -A $SESSION_ID ssh -t $HOST_USER@localhost "$@"
+    eval "abduco -e ^z -A $SESSION_ID vi +'terminal ssh -t $HOST_USER@localhost $@'"
 }
 
 h() {
@@ -219,8 +219,8 @@ h() {
 }
 
 update() {
-    hs "yay -Syu;read"
-    hs "flatpak update --user;read"
+    hs "yay -Syu"
+    hs "flatpak update --user"
 }
 
 bdiff() { diff -u $@ | ydiff -s -w 0 }
