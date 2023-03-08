@@ -254,7 +254,7 @@ highlight CopilotSuggestion gui=italic guifg=#aaaaaa ctermfg=8
 
 " highlight link vueTSPunctSpecial javascriptTSVariable
 
-au TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=50}
+au TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=100}
 
 
 " lots of ALTernative bindings
@@ -268,7 +268,8 @@ nnoremap <A-K> <cmd>WinShift up<CR>
 nnoremap <A-L> <cmd>WinShift right<CR>
 nnoremap <silent> <A-v> <cmd>vsplit<CR>
 nnoremap <silent> <A-s> <cmd>split<CR>
-nnoremap <silent> <A-w> <cmd>windo bwipeout!<CR>
+nnoremap <silent> <A-w> <cmd>windo q<CR>
+nnoremap <silent> <A-W> <cmd>windo bwipeout!<CR>
 nnoremap <silent> <A-q> <cmd>wincmd c<CR>
 nnoremap <silent> <A-Q> <cmd>Bwipeout!<CR>
 nnoremap <silent> <A-CR> <cmd>ScratchBuffer<CR>
@@ -1286,13 +1287,8 @@ dapui.setup {
     },
 }
 dap.listeners.after.event_initialized["dapui.config"] = function()
+    vim.cmd("tab split")
     dapui.open()
-end
-dap.listeners.before.event_terminated["dapui.config"] = function()
-    dapui.close()
-end
-dap.listeners.before.event_exited["dapui.config"] = function()
-    dapui.close()
 end
 dap.adapters.php = {
     type = 'executable',
